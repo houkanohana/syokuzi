@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build && node scripts/generate-sw.mjs",
     "lint": "eslint",
-    "preview": "npx -y serve@14.2.4 out -l 3000"
+    "preview": "npx -y serve@14.2.4 out -l 3000",
+    "test": "vitest run"
   },
   "dependencies": {
     "dexie": "^4.4.7",
@@ -23,6 +24,7 @@
     "eslint": "^9",
     "eslint-config-next": "^16.4.6",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.7"
   }
 }
