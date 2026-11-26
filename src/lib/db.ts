@@ -4,16 +4,37 @@
 // 表（テーブル）を足すときは、version(1) を消さずに version(2) を足していく
 // （すでに使っている人のデータを壊さないため）。
 import Dexie, { type EntityTable } from "dexie";
+import type { Activity, Conditions, Instruction, Nutrient, Sex } from "./targets";
 
 /** 設定の1件（キーと値の組） */
 export type Setting = { key: string; value: unknown };
 
+/** 食べる人（家族の1人） */
+export type Person = {
+  id: number;
+  /** 呼び名（例：父、本人）。このスマホの中だけに保存 */
+  nickname: string;
+  age: number | null;
+  sex: Sex | null;
+  heightCm: number | null;
+  weightKg: number | null;
+  activity: Activity;
+  conditions: Conditions;
+  /** 病院の指示（入れた栄養素だけ） */
+  instructions: Partial<Record<Nutrient, Instruction>>;
+  createdAt: string;
+  updatedAt: string;
+};
+
 class AppDB extends Dexie {
   settings!: EntityTable<Setting, "key">;
+  people!: EntityTable<Person, "id">;
 
   constructor() {
     super("syokuzi");
     this.version(1).stores({ settings: "key" });
+    // ステップ2：食べる人（家族）を足す
+    this.version(2).stores({ settings: "key", people: "++id" });
   }
 }
 

@@ -1,14 +1,14 @@
 import Link from "next/link";
-import { ComingSoon } from "@/components/coming-soon";
+import { BackupSection } from "./backup-section";
+import { PeopleSection } from "./people-section";
 import { StorageStatus } from "./storage-status";
 
 export default function ProfilePage() {
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-bold">わたし</h1>
-      <ComingSoon>
-        何人分か、身長・体重・年齢、病気・症状、1日の目安（塩分・カロリーなど）を入れる画面です。
-      </ComingSoon>
+      <h1 className="text-2xl font-bold">わたし・家族</h1>
+      <PeopleSection />
+      <BackupSection />
 
       <section className="space-y-3 rounded-xl bg-white p-4 shadow-sm ring-1 ring-line">
         <h2 className="text-lg font-bold">このアプリについて</h2>
