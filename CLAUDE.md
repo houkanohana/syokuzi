@@ -25,7 +25,7 @@ OHANAの社内アプリ（`houkanohana/ohana-system`）とは**完全に別の�
 
 ## 技術方針
 - Next.js（App Router）+ TypeScript + Tailwind CSS。**書く前に `node_modules/next/dist/docs/` の該当ページを読む**（版が新しく、覚えている書き方と違うことがあるため。AGENTS.md）
-- 第1段階は**サーバーを使わない**。`next build` で `out/` に書き出し（`output: "export"`）、無料で商用利用もできる公開先（Cloudflare Pages の予定）に置く
+- 第1段階は**サーバーを使わない**。`next build` で `out/` に書き出し（`output: "export"`）、Cloudflare Pages（無料・商用利用可）に置く。公開先：https://syokuzi.pages.dev 。本線（main）に入ると自動で公開し直されるので、main に入れるのは依頼者の承認を得てから
   - Vercel の無料プランは商用利用が禁止なので使わない（第4段階で販売するため）
 - データはスマホの中（IndexedDB。`src/lib/db.ts`、Dexie という部品で読み書き）に保存し、外へ送らない
   - 表を足すときは `version(1)` を消さず `version(2)` を足す（使っている人のデータを壊さないため）
