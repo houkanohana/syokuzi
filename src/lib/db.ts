@@ -26,15 +26,35 @@ export type Person = {
   updatedAt: string;
 };
 
+/** 家にある食材（在庫）の1件 */
+export type StockItem = {
+  id: number;
+  /** 食材データの食品番号。一覧にない食材を自由に入れたときは null */
+  foodId: string | null;
+  /** 一覧にない食材の名前（foodId が null のとき） */
+  customName: string | null;
+  storage: "冷蔵" | "冷凍" | "常温";
+  /** 量（入れなくてもよい） */
+  amount: number | null;
+  unit: string | null;
+  /** 期限（YYYY-MM-DD、入れなくてもよい） */
+  expiry: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
 class AppDB extends Dexie {
   settings!: EntityTable<Setting, "key">;
   people!: EntityTable<Person, "id">;
+  stock!: EntityTable<StockItem, "id">;
 
   constructor() {
     super("syokuzi");
     this.version(1).stores({ settings: "key" });
     // ステップ2：食べる人（家族）を足す
     this.version(2).stores({ settings: "key", people: "++id" });
+    // ステップ3：在庫を足す
+    this.version(3).stores({ settings: "key", people: "++id", stock: "++id, foodId, storage" });
   }
 }
 

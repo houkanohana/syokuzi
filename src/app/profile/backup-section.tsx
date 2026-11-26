@@ -67,7 +67,7 @@ export function BackupSection() {
           try {
             const data = parseBackup(await f.text());
             const ok = window.confirm(
-              `今のデータを消して、ファイルの中身（家族 ${data.people.length}人）に置きかえます。よろしいですか？`
+              `今のデータを消して、ファイルの中身（家族 ${data.people.length}人・在庫 ${data.stock?.length ?? 0}品）に置きかえます。よろしいですか？`
             );
             if (!ok) return;
             await importBackup(data);
