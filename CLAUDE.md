@@ -50,7 +50,8 @@ OHANAの社内アプリ（`houkanohana/ohana-system`）とは**完全に別の�
 4. 電波がない状態で、開く・タブで画面を移れる
 5. （ステップ2以降）病気が2つ重なったときに、厳しい方の値が使われる
 6. （ステップ4以降）栄養の計算が、手計算と合う（見本の料理で確かめる）
-7. `npm run build`・`npm run lint` が通る
+7. `npm test`（目安値の計算の自動テスト）・`npm run build`・`npm run lint` が通る
+   - 目安値の計算（`src/lib/targets.ts`）を変えたら、`docs/目安値の案.md` とテストも同じように直す
 
 確かめ方：`npm run build` のあと `npm run preview`（または `python3 -m http.server 3000 --directory out`）で開き、Playwright で操作する。
 
