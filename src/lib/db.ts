@@ -1,0 +1,40 @@
+// スマホの中の保存場所（ブラウザの IndexedDB という保存領域）。
+// 第1段階はサーバーを使わず、入力したものはすべてここに置く。外には送らない。
+//
+// 表（テーブル）を足すときは、version(1) を消さずに version(2) を足していく
+// （すでに使っている人のデータを壊さないため）。
+import Dexie, { type EntityTable } from "dexie";
+
+/** 設定の1件（キーと値の組） */
+export type Setting = { key: string; value: unknown };
+
+class AppDB extends Dexie {
+  settings!: EntityTable<Setting, "key">;
+
+  constructor() {
+    super("syokuzi");
+    this.version(1).stores({ settings: "key" });
+  }
+}
+
+export const db = new AppDB();
+
+export async function getSetting<T>(key: string): Promise<T | undefined> {
+  const row = await db.settings.get(key);
+  return row?.value as T | undefined;
+}
+
+export async function setSetting(key: string, value: unknown): Promise<void> {
+  await db.settings.put({ key, value });
+}
+
+/**
+ * 「このデータは消さないで」とブラウザに頼む。
+ * 認められると、容量が足りなくなってもブラウザが勝手に消しにくくなる。
+ * 認められたかどうかを返す（対応していないブラウザでは false）。
+ */
+export async function requestPersistentStorage(): Promise<boolean> {
+  if (typeof navigator === "undefined" || !navigator.storage?.persist) return false;
+  if (await navigator.storage.persisted()) return true;
+  return navigator.storage.persist();
+}
