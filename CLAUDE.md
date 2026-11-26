@@ -30,6 +30,7 @@ OHANAの社内アプリ（`houkanohana/ohana-system`）とは**完全に別の�
 - データはスマホの中（IndexedDB。`src/lib/db.ts`、Dexie という部品で読み書き）に保存し、外へ送らない
   - 表を足すときは `version(1)` を消さず `version(2)` を足す（使っている人のデータを壊さないため）
 - 食材データ（`src/data/foods.json`）は手で直さない。`scripts/build-foods.py` の一覧を直して、成分表のExcelから作り直す（出典の表示も必ず残す）
+- レシピ（`src/data/recipes.ts`）：分量は1人分・正味のg、材料は食材データの食品番号で書く。直したら `npm run docs:recipes` で `docs/レシピ案.md` を作り直す。減塩の上限（主菜1.5g・副菜0.8g・汁物1.2g・主食1.0g）はテストで確かめる
 - 電波がなくても開けるよう、ビルドのあとに `scripts/generate-sw.mjs` がサービスワーカー（`out/sw.js`）を作る
 - 費用のかかるもの（AIのAPIキー、有料プラン）は、依頼者の承認なしに入れない。AIは第2段階（チラシ読み取り）で導入を検討する
 - シークレット（鍵・パスワード）は .env（.gitignore対象）。コミットに含めない
