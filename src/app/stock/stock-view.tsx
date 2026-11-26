@@ -1,7 +1,9 @@
 "use client";
 
 import { useLiveQuery } from "dexie-react-hooks";
+import Link from "next/link";
 import { useState } from "react";
+import { getPantry } from "@/lib/plan-store";
 import { db, type StockItem } from "@/lib/db";
 import { CATEGORIES, FOODS, FOOD_SOURCE, STORAGES, searchFoods, type Food, type Storage } from "@/lib/foods";
 import {
@@ -23,6 +25,7 @@ const STORAGE_ICON: Record<Storage, string> = { 冷蔵: "🧊", 冷凍: "❄️"
 
 export function StockView() {
   const items = useLiveQuery(() => db.stock.toArray());
+  const pantryCount = useLiveQuery(async () => (await getPantry()).length) ?? 0;
   const [filter, setFilter] = useState<Filter>("all");
   const [adding, setAdding] = useState(false);
   const [openId, setOpenId] = useState<number | null>(null);
@@ -42,6 +45,19 @@ export function StockView() {
           {soon > 0 && <span className="block">⏰ 2日以内に期限が来るものが {soon}品 あります</span>}
         </p>
       )}
+
+      <Link
+        href="/stock/pantry/"
+        className="flex items-center justify-between rounded-xl bg-white p-4 font-bold shadow-sm ring-1 ring-line"
+      >
+        <span>
+          🧂 家にある調味料・油・粉
+          <span className="block text-sm font-normal text-ink-soft">
+            {pantryCount === 0 ? "まだ登録がありません" : `${pantryCount}品を登録しています`}
+          </span>
+        </span>
+        <span className="text-brand">登録する ›</span>
+      </Link>
 
       {adding ? (
         <AddPanel onClose={() => setAdding(false)} />

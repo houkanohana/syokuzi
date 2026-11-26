@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BackupSection } from "./backup-section";
+import { MealRatioSection } from "./meal-ratio-section";
 import { PeopleSection } from "./people-section";
 import { StorageStatus } from "./storage-status";
 
@@ -8,6 +9,7 @@ export default function ProfilePage() {
     <div className="space-y-4">
       <h1 className="text-2xl font-bold">わたし・家族</h1>
       <PeopleSection />
+      <MealRatioSection />
       <BackupSection />
 
       <section className="space-y-3 rounded-xl bg-white p-4 shadow-sm ring-1 ring-line">
