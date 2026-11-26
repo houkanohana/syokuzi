@@ -52,9 +52,21 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   const req = event.request;
-  if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
+
+  // 「ページがあるか」の確認（HEAD）にも、預かっているものから答える（電波がなくても）
+  if (req.method === "HEAD") {
+    event.respondWith(
+      caches.match(url.pathname, { ignoreSearch: true }).then((hit) =>
+        hit
+          ? new Response(null, { status: hit.status, headers: hit.headers })
+          : fetch(req).catch(() => new Response(null, { status: 504 }))
+      )
+    );
+    return;
+  }
+  if (req.method !== "GET") return;
 
   // 預かっているものはすぐ返す。無いものは取りに行く。
   // ページの移動で見つからないときは、トップの画面を返す（電波がないときの保険）
