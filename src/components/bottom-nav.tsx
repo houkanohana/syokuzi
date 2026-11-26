@@ -23,7 +23,9 @@ export function BottomNav() {
       <ul className="mx-auto grid max-w-xl grid-cols-4">
         {TABS.map((tab) => {
           const active =
-            tab.href === "/" ? norm(pathname) === "/" : norm(pathname).startsWith(tab.href);
+            tab.href === "/"
+              ? norm(pathname) === "/" || norm(pathname).startsWith("/recipe/")
+              : norm(pathname).startsWith(tab.href);
           return (
             <li key={tab.href}>
               <Link
