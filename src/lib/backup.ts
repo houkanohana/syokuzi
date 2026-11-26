@@ -1,5 +1,5 @@
 // バックアップ：スマホの中のデータを、まるごと1つのファイル（JSON）に書き出す・読み込む
-import { db, type Person, type Setting, type StockItem } from "./db";
+import { db, type Person, type Setting, type ShoppingItem, type StockItem } from "./db";
 
 const APP = "syokuzi";
 const FORMAT = 1;
@@ -12,6 +12,8 @@ type BackupFile = {
   people: Person[];
   /** ステップ3から。古いファイルには無い */
   stock?: StockItem[];
+  /** ステップ5から。古いファイルには無い */
+  shopping?: ShoppingItem[];
 };
 
 export const LAST_BACKUP_KEY = "lastBackupAt";
@@ -26,6 +28,7 @@ export async function exportBackup(): Promise<{ json: string; fileName: string }
     settings: await db.settings.toArray(),
     people: await db.people.toArray(),
     stock: await db.stock.toArray(),
+    shopping: await db.shopping.toArray(),
   };
   // 日付は日本時間で
   const ymd = new Intl.DateTimeFormat("sv-SE", { timeZone: "Asia/Tokyo" }).format(now);
@@ -64,17 +67,27 @@ export function parseBackup(text: string): BackupFile {
       }
     }
   }
+  if (d.shopping !== undefined) {
+    if (!Array.isArray(d.shopping)) throw new Error("買い物リストの中身がおかしいところがあります");
+    for (const it of d.shopping) {
+      if (!it || typeof it.id !== "number" || typeof it.checked !== "boolean") {
+        throw new Error("買い物リストの中身がおかしいところがあります");
+      }
+    }
+  }
   return d as BackupFile;
 }
 
 /** 今のデータを消して、ファイルの中身に置きかえる */
 export async function importBackup(file: BackupFile): Promise<void> {
-  await db.transaction("rw", db.settings, db.people, db.stock, async () => {
+  await db.transaction("rw", [db.settings, db.people, db.stock, db.shopping], async () => {
     await db.settings.clear();
     await db.people.clear();
     await db.stock.clear();
+    await db.shopping.clear();
     await db.settings.bulkPut(file.settings);
     await db.people.bulkPut(file.people);
     await db.stock.bulkPut(file.stock ?? []);
+    await db.shopping.bulkPut(file.shopping ?? []);
   });
 }

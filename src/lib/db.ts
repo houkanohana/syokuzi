@@ -43,10 +43,26 @@ export type StockItem = {
   updatedAt: string;
 };
 
+/** 買い物リストの1件 */
+export type ShoppingItem = {
+  id: number;
+  /** 食材データの食品番号（一覧にない食材は null） */
+  foodId: string | null;
+  /** 一覧にない食材の名前 */
+  customName: string | null;
+  /** 必要な量（g、人数分の合計。分からなければ null） */
+  grams: number | null;
+  checked: boolean;
+  /** どのレシピのために足したか */
+  recipeIds: string[];
+  createdAt: string;
+};
+
 class AppDB extends Dexie {
   settings!: EntityTable<Setting, "key">;
   people!: EntityTable<Person, "id">;
   stock!: EntityTable<StockItem, "id">;
+  shopping!: EntityTable<ShoppingItem, "id">;
 
   constructor() {
     super("syokuzi");
@@ -55,6 +71,13 @@ class AppDB extends Dexie {
     this.version(2).stores({ settings: "key", people: "++id" });
     // ステップ3：在庫を足す
     this.version(3).stores({ settings: "key", people: "++id", stock: "++id, foodId, storage" });
+    // ステップ5：買い物リストを足す
+    this.version(4).stores({
+      settings: "key",
+      people: "++id",
+      stock: "++id, foodId, storage",
+      shopping: "++id, foodId",
+    });
   }
 }
 
