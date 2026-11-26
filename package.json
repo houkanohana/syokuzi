@@ -7,7 +7,8 @@
     "build": "next build && node scripts/generate-sw.mjs",
     "lint": "eslint",
     "preview": "npx -y serve@14.2.4 out -l 3000",
-    "test": "vitest run"
+    "test": "vitest run",
+    "docs:recipes": "tsx scripts/recipes-doc.ts"
   },
   "dependencies": {
     "dexie": "^4.4.7",
@@ -24,6 +25,7 @@
     "eslint": "^9",
     "eslint-config-next": "^16.4.6",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5",
     "vitest": "^3.2.7"
   }
